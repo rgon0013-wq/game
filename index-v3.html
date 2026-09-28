@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>申惟娃娃的小屋 V3</title>
+<style>
+:root{--ink:#67483d;--pink:#f49aaa;--cream:#fff9f3;--line:#efd9cc;--shadow:0 10px 25px #76513b26}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;font-family:"PingFang SC","Microsoft YaHei",system-ui,sans-serif;color:var(--ink)}
+body{background:linear-gradient(135deg,#ffe1e7,#fff0d8);padding:10px}
+button{font:inherit;color:inherit;touch-action:manipulation}
+.game{max-width:1100px;margin:auto}.top{display:flex;justify-content:space-between;gap:8px;margin-bottom:8px}
+.card{background:#fffaf4ee;border:2px solid #fff;border-radius:22px;box-shadow:var(--shadow)}
+.title,.coins{padding:9px 15px;font-weight:900}.layout{display:grid;grid-template-columns:74px minmax(0,1fr) 280px;gap:9px}
+.nav{display:flex;flex-direction:column;gap:8px}.nav button{border:0;padding:12px 4px;border-radius:20px;background:#fffaf4;box-shadow:var(--shadow);font-weight:800}.nav button.on{background:#ffc8d3}
+.room{position:relative;min-height:590px;overflow:hidden;border-radius:28px;border:3px solid #fff;box-shadow:var(--shadow);background:linear-gradient(#f9ddce 0 64%,#dba06b 64%)}
+.window{position:absolute;left:55%;top:6%;width:27%;height:30%;background:linear-gradient(#aee0fa,#eefaff 60%,#a9d48e);border:10px solid #d59c68;border-radius:8px}
+.window:before,.window:after{content:"";position:absolute;background:#d59c68}.window:before{left:47%;width:7%;height:100%}.window:after{top:47%;height:7%;width:100%}
+.bed{position:absolute;left:5%;bottom:23%;width:34%;height:25%;background:#c99364;border-radius:28px}.bed:after{content:"";position:absolute;inset:12% 4% 0;border:8px solid #fff1e8;border-radius:22px;background:repeating-linear-gradient(0deg,#f6b5c4 0 22px,#ffd8df 22px 44px)}
+.rug{position:absolute;left:28%;bottom:4%;width:48%;height:24%;border-radius:50%;background:radial-gradient(circle,#fff6e8 0 14%,#f4b6c6 15% 23%,#fff6e8 24% 45%,#f5c4cf 46% 54%,#fff7e9 55%)}
+.table{position:absolute;left:20%;bottom:16%;width:17%;height:7%;border-radius:50%;background:#c78d5d;box-shadow:0 9px 0 #a66e48}.table:after{content:"🌷 ☕";position:absolute;top:-31px;left:20%;font-size:25px}
+.shelf{position:absolute;right:5%;top:10%;width:14%;height:40%;background:#c08b60;border:7px solid #dda979;border-radius:10px}.shelf:after{content:"📚\A🐰\A🪴";white-space:pre;position:absolute;inset:8%;text-align:center;font-size:27px;line-height:2}
+.hero{position:absolute;left:53%;top:84%;width:132px;z-index:30;transform:translate(-50%,-100%);filter:drop-shadow(0 10px 7px #60402d30);transition:left var(--move,.45s) ease-in-out,top var(--move,.45s) ease-in-out}
+.hero img{width:100%;display:block;pointer-events:none;animation:idle 2s ease-in-out infinite alternate;transform-origin:50% 100%}
+@keyframes idle{to{transform:translateY(-3px) scale(1.012)}}.hero.work img{animation:work .24s ease-in-out infinite alternate}@keyframes work{to{transform:rotate(3deg) translateY(-4px)}}
+.bubble{position:absolute;bottom:98%;left:50%;transform:translateX(-50%);background:#fff;border-radius:16px;padding:5px 10px;white-space:nowrap;font-weight:800;opacity:0;transition:.2s}.bubble.show{opacity:1}
+.mess{position:absolute;font-size:32px;z-index:20;border:0;background:transparent;cursor:pointer;filter:drop-shadow(0 4px 4px #6c473333)}
+.shop{padding:12px;min-height:590px}.tabs{display:flex;gap:5px;margin-bottom:10px}.tabs button{flex:1;border:0;border-radius:12px;padding:8px 4px;background:#fff0ea;font-weight:800}.tabs button.on{background:var(--pink);color:#fff}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}.product{background:#fff0ec;border-radius:18px;padding:9px;text-align:center}.product .pic{font-size:38px}.product .name{font-size:12px;font-weight:800;margin:3px}.buy{width:100%;border:0;border-radius:11px;padding:7px;background:#fff;font-weight:900;cursor:pointer}.buy:active{transform:scale(.97)}.buy:disabled{opacity:.4}
+.placed{position:absolute;z-index:18;transform:translate(-50%,-50%);font-size:38px;cursor:grab;touch-action:none}
+.bottom{margin-top:9px;padding:11px 15px;display:flex;align-items:center;gap:10px;font-weight:800}.avatar{width:48px;height:48px;object-fit:contain}
+@media(max-width:800px){.layout{grid-template-columns:62px 1fr}.shop{grid-column:1/-1;min-height:0}.room{min-height:500px}.hero{width:112px}.grid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:520px){body{padding:5px}.room{min-height:430px}.hero{width:96px}.grid{grid-template-columns:repeat(2,1fr)}}
+</style></head>
+<body>
+<div class="game">
+ <div class="top"><div class="title card">🍓 申惟娃娃的小屋 <small>V3</small></div><div class="coins card">🪙 <span id="coins">100</span></div></div>
+ <div class="layout">
+  <nav class="nav"><button id="decorBtn" class="on">🛋️<br>装饰</button><button id="tidyBtn">🧹<br>收拾</button><button id="photoBtn">📷<br>拍照</button></nav>
+  <main class="room" id="room">
+   <div class="window"></div><div class="bed"></div><div class="rug"></div><div class="table"></div><div class="shelf"></div>
+   <div class="hero" id="hero"><div class="bubble" id="bubble">你好呀～</div><img src="shinyu-game-character.png" alt="申惟娃娃"></div>
+  </main>
+  <aside class="shop card" id="shop"><div class="tabs" id="tabs"></div><div class="grid" id="grid"></div></aside>
+ </div>
+ <div class="bottom card"><img class="avatar" src="shinyu-game-character.png"><span id="msg">装饰模式：可以买家具、拖动家具；点地板娃娃会走过去。</span></div>
+</div>
+<script>
+const $=id=>document.getElementById(id);
+const DATA={
+ "家具":[["🛏️","草莓小床",30],["🛋️","奶油沙发",25],["🪑","小椅子",10],["📺","复古电视",30],["🧸","小熊",15],["🪞","镜子",18]],
+ "装饰":[["🌷","郁金香",8],["🖼️","挂画",8],["💡","小台灯",10],["📚","小书堆",8],["🎀","蝴蝶结",6],["🍓","草莓抱枕",8]],
+ "植物":[["🪴","绿植",8],["🌻","向日葵",6],["🌵","仙人掌",5],["🌸","小花",6]]
+};
+const MESS=["🧦","📄","🥤","🍎","👕"];
+let state={coins:100,items:[]};try{state={...state,...JSON.parse(localStorage.getItem("shinyuStable")||"{}")}}catch(e){}
+let cat="家具",mode="decor",messes=[],uid=Date.now();
+function save(){localStorage.setItem("shinyuStable",JSON.stringify(state))}
+function hud(){$("coins").textContent=state.coins}
+function say(t){$("msg").textContent=t}
+function talk(t){const b=$("bubble");b.textContent=t;b.classList.add("show");clearTimeout(talk.t);talk.t=setTimeout(()=>b.classList.remove("show"),1600)}
+function buildShop(){
+ $("tabs").innerHTML=Object.keys(DATA).map(k=>`<button data-cat="${k}" class="${k===cat?"on":""}">${k}</button>`).join("");
+ $("grid").innerHTML=DATA[cat].map((x,i)=>`<div class="product"><div class="pic">${x[0]}</div><div class="name">${x[1]}</div><button class="buy" data-buy="${i}">🪙 ${x[2]} · 买</button></div>`).join("");
+}
+$("tabs").addEventListener("click",e=>{const b=e.target.closest("[data-cat]");if(!b)return;cat=b.dataset.cat;buildShop()});
+$("grid").addEventListener("click",e=>{const b=e.target.closest("[data-buy]");if(!b)return;e.preventDefault();e.stopPropagation();const [pic,name,price]=DATA[cat][+b.dataset.buy];buy(pic,name,price)});
+function buy(pic,name,price){
+ if(state.coins<price){talk("金币不够啦");say("先去收拾房间赚金币吧～");return}
+ state.coins-=price;state.items.push({id:uid++,pic,name,x:48+Math.random()*25,y:68+Math.random()*18});save();hud();renderItems();talk("买到啦 ♡");say(`✓ ${name} 已放进房间，可以拖动它。`);
+}
+function renderItems(){
+ document.querySelectorAll(".placed,.mess").forEach(n=>n.remove());
+ state.items.forEach(i=>{const n=document.createElement("div");n.className="placed";n.textContent=i.pic;n.style.left=i.x+"%";n.style.top=i.y+"%";n.dataset.id=i.id;n.onpointerdown=e=>drag(e,i,n);$("room").appendChild(n)});
+ messes.forEach(m=>{const n=document.createElement("button");n.className="mess";n.textContent=m.pic;n.style.left=m.x+"%";n.style.top=m.y+"%";n.onclick=e=>{e.preventDefault();e.stopPropagation();clean(m)};$("room").appendChild(n)})
+}
+function drag(e,i,n){
+ if(mode!=="decor")return;e.preventDefault();e.stopPropagation();n.setPointerCapture?.(e.pointerId);const r=$("room").getBoundingClientRect();
+ const move=ev=>{i.x=Math.max(5,Math.min(95,(ev.clientX-r.left)/r.width*100));i.y=Math.max(55,Math.min(93,(ev.clientY-r.top)/r.height*100));n.style.left=i.x+"%";n.style.top=i.y+"%"};
+ const up=()=>{n.removeEventListener("pointermove",move);n.removeEventListener("pointerup",up);save()};
+ n.addEventListener("pointermove",move);n.addEventListener("pointerup",up)
+}
+function spawn(){
+ if(messes.length)return;
+ for(let i=0;i<5;i++)messes.push({id:i,pic:MESS[i],x:12+Math.random()*76,y:65+Math.random()*25});
+ renderItems();talk("一起收拾吧～");say("收拾模式：点杂物，娃娃会走过去收拾。")
+}
+function clean(m){
+ walkHero(m.x,Math.min(90,m.y+3),()=>{
+   messes=messes.filter(x=>x!==m);state.coins+=5;save();hud();renderItems();
+   if(!messes.length){state.coins+=10;save();hud();talk("干净啦！");say("全部收拾完成，额外 +10 🪙")}
+   else talk("+5 🪙");
+ });
+}
+
+let heroPos={x:53,y:82};
+function walkHero(x,y,after){
+  // Only allow walking on the floor/rug area, never on walls or UI.
+  x=Math.max(14,Math.min(86,x));
+  y=Math.max(68,Math.min(91,y));
+  const distance=Math.hypot(x-heroPos.x,y-heroPos.y);
+  const duration=Math.max(.25,Math.min(.8,distance/45));
+  const hero=$("hero"), pic=hero.querySelector("img");
+  hero.style.setProperty("--move",duration+"s");
+  pic.style.transform=x<heroPos.x?"scaleX(-1)":"scaleX(1)";
+  hero.classList.add("work");
+  hero.style.left=x+"%";
+  hero.style.top=y+"%";
+  hero.style.zIndex=Math.round(y)+20;
+  heroPos={x,y};
+  clearTimeout(walkHero.t);
+  walkHero.t=setTimeout(()=>{
+    hero.classList.remove("work");
+    pic.style.transform=x<53?"scaleX(-1)":"scaleX(1)";
+    if(after) after();
+  },duration*1000);
+}
+$("room").addEventListener("pointerdown",e=>{
+  if(mode!=="decor") return;
+  if(e.target.closest(".placed,.mess,.hero")) return;
+  const r=$("room").getBoundingClientRect();
+  const x=(e.clientX-r.left)/r.width*100;
+  const y=(e.clientY-r.top)/r.height*100;
+  if(y<64) return; // wall area is not walkable
+  walkHero(x,y);
+  say("娃娃会在地板区域走动，不会再飘到墙上。");
+});
+
+function setMode(m){mode=m;$("decorBtn").classList.toggle("on",m==="decor");$("tidyBtn").classList.toggle("on",m==="tidy");$("shop").style.display=m==="decor"?"":"none";if(m==="tidy")spawn();else say("装饰模式：可以买家具、拖动家具；点地板娃娃会走过去。")}
+$("decorBtn").onclick=()=>setMode("decor");$("tidyBtn").onclick=()=>setMode("tidy");$("photoBtn").onclick=()=>{talk("茄子～");say("拍照功能下一版再做。")}
+buildShop();renderItems();hud();setTimeout(()=>talk("你好呀～"),300);
+</script></body></html>
