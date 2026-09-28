@@ -1,12 +1,14 @@
-# 🍓 小莓的小屋
+# 申惟娃娃的小屋 V2
 
-毛绒风小游戏:控制毛绒主角「小莓」装饰房间、收拾杂物、赚金币。
+上传到 GitHub 仓库根目录时，请保持：
 
-- 单文件 `index.html`,无需安装、无外部依赖
-- 点地板:小莓走过去 / 点杂物:小莓跑去收拾
-- 进度保存在浏览器本地
+- index.html
+- assets/shinyu-plush.png
 
-## 部署到 GitHub Pages
-1. 新建仓库,把 `index.html` 和 `README.md` 上传到仓库根目录
-2. Settings → Pages → Source 选 `Deploy from a branch`,分支选 `main`,目录选 `/ (root)`
-3. 等 1~2 分钟,访问 `https://<你的用户名>.github.io/<仓库名>/`
+不要只上传 index.html，否则主角图片不会显示。
+
+V2 改动：
+- 使用原始毛绒娃娃照片做主角
+- 重做奶油粉房间和游戏 UI
+- 保留走路、收拾、金币、购买、拖动家具、本地存档
+- 为 V3 的毛绒 PNG 家具素材预留结构
